@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -38,6 +40,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.weatherapp.data.model.WeatherInfoResponse
 import com.example.weatherapp.ui.theme.WeatherUiState
 import com.example.weatherapp.ui.theme.utils.isValidInput
@@ -178,17 +181,34 @@ fun weatherInfoResult(weatherInfo: WeatherInfoResponse?) {
 
             // Weather Conditions
             if(weatherInfo?.weather?.isNotEmpty() ==true){
-                InfoRow(label = "Weather", value = weatherInfo.weather[0].main)
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Weather: ",
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.width(120.dp) // Align values
+                    )
+                    Text(text = weatherInfo.weather[0].main)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    val iconCode = weatherInfo.weather[0].icon
+                    val iconUrl = "https://openweathermap.org/img/wn/$iconCode@2x.png"
+
+                    AsyncImage(
+                        model = iconUrl,
+                        contentDescription = "Weather Icon: ${weatherInfo.weather[0].description}",
+                        modifier = Modifier.size(30.dp).padding(bottom = 8.dp)
+                    )
+
+
+                }
                 InfoRow(label = "Description", value = weatherInfo.weather[0].description)
-                //  InfoRow(label = "Main", value = weatherInfo.weather[0].main)
             }
 
 
             // Temperature Info
-            InfoRow(label = "Current Temperature", value = "${weatherInfo?.main?.temp?.toFahrenheit() ?: ""} \u00B0F " ,  modifier = Modifier.testTag("current_temp"))
-            InfoRow(label = "Feels Like", value = "${weatherInfo?.main?.feelsLike?.toFahrenheit() ?: ""} \u00B0F " ,  modifier = Modifier.testTag("feels_like_temp"))
-            InfoRow(label = "Min Temperature", value = "${weatherInfo?.main?.tempMin?.toFahrenheit() ?: ""} \u00B0F " ,  modifier = Modifier.testTag("min_temp"))
-            InfoRow(label = "Max Temperature", value = "${weatherInfo?.main?.tempMax?.toFahrenheit() ?: ""} \u00B0F " ,  modifier = Modifier.testTag("max_temp"))
+            InfoRow(label = "Current Temperature", value = "${weatherInfo?.main?.temp?.toFahrenheit() ?: ""}\u00B0F " ,  modifier = Modifier.testTag("current_temp"))
+            InfoRow(label = "Feels Like", value = "${weatherInfo?.main?.feelsLike?.toFahrenheit() ?: ""}\u00B0F " ,  modifier = Modifier.testTag("feels_like_temp"))
+            InfoRow(label = "Min Temperature", value = "${weatherInfo?.main?.tempMin?.toFahrenheit() ?: ""}\u00B0F " ,  modifier = Modifier.testTag("min_temp"))
+            InfoRow(label = "Max Temperature", value = "${weatherInfo?.main?.tempMax?.toFahrenheit() ?: ""}\u00B0F " ,  modifier = Modifier.testTag("max_temp"))
 
             InfoRow(label = "Pressure", value = weatherInfo?.main?.pressure.toString())
             InfoRow(label = "Humidity", value = weatherInfo?.main?.humidity.toString())
